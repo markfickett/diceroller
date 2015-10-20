@@ -4,8 +4,8 @@
 #define PIN_SERVO 2
 #define PIN_PICTURE 1
 
-// Usable range is around [0, 200].
-#define ANGLE_SHAKE 0
+// Usable range is around [-30, 200].
+#define ANGLE_SHAKE -30
 #define ANGLE_UPRIGHT 195
 
 #define DELAY_PREPARE_MS  1000
@@ -25,20 +25,17 @@ void setup() {
 }
 
 void loop() {
-  for (int angle = ANGLE_UPRIGHT; angle > ANGLE_SHAKE; angle -= 5) {
+  for (int angle = ANGLE_UPRIGHT; angle > ANGLE_SHAKE; angle -= 20) {
     servo.write(angle);
     servo.refresh();
     delay(MOVE_INTERVAL_MS);
   }
+  moveServo(ANGLE_SHAKE);
   digitalWrite(PIN_STATUS_LED, HIGH);
   delay(DELAY_PREPARE_MS);
   digitalWrite(PIN_STATUS_LED, LOW);
 
-  servo.write(ANGLE_UPRIGHT);
-  for (int i = 0; i < 10; i++) {
-    servo.refresh();
-    delay(MOVE_INTERVAL_MS); // Make sure the servo catches up.
-  }
+  moveServo(ANGLE_UPRIGHT);
   delay(DELAY_SETTLE_MS);
 
   digitalWrite(PIN_STATUS_LED, HIGH);
@@ -46,4 +43,13 @@ void loop() {
   delay(DELAY_PICTURE_MS); // No servo updates: avoid shaking.
   digitalWrite(PIN_PICTURE, LOW);
   digitalWrite(PIN_STATUS_LED, LOW);
+}
+
+// Set the new servo angle and refresh it / wait for it to catch up.
+void moveServo(int newAngle) {
+  servo.write(newAngle);
+  for (int i = 0; i < 10; i++) {
+    servo.refresh();
+    delay(MOVE_INTERVAL_MS);
+  }
 }
