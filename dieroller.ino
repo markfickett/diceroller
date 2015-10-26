@@ -1,5 +1,3 @@
-#include <Adafruit_SoftServo.h>
-
 #define PIN_STATUS_LED 0
 #define PIN_SERVO 2
 #define PIN_PICTURE 1
@@ -15,19 +13,19 @@
 
 #define SERVO_UPDATE_INTERVAL_MS 20
 
-Adafruit_SoftServo servo;
+uint16_t servoMicros;
 
 void setup() {
-  servo.attach(PIN_SERVO);
-  servo.write(ANGLE_UPRIGHT);
+  pinMode(PIN_SERVO, OUTPUT);
+  setServoAngle(ANGLE_UPRIGHT);
   pinMode(PIN_PICTURE, OUTPUT);
   pinMode(PIN_STATUS_LED, OUTPUT);
 }
 
 void loop() {
   for (int angle = ANGLE_UPRIGHT; angle > ANGLE_SHAKE; angle -= 20) {
-    servo.write(angle);
-    servo.refresh();
+    setServoAngle(angle);
+    refreshServo();
     delay(MOVE_INTERVAL_MS);
   }
   moveServo(ANGLE_SHAKE);
@@ -47,9 +45,19 @@ void loop() {
 
 // Set the new servo angle and refresh it / wait for it to catch up.
 void moveServo(int newAngle) {
-  servo.write(newAngle);
+  setServoAngle(newAngle);
   for (int i = 0; i < 10; i++) {
-    servo.refresh();
+    refreshServo();
     delay(MOVE_INTERVAL_MS);
   }
+}
+
+void setServoAngle(int angle) {
+  servoMicros = max(0, map(angle, 0, 180, 1000, 2000));
+}
+
+void refreshServo() {
+  digitalWrite(PIN_SERVO, HIGH);
+  delayMicroseconds(servoMicros);
+  digitalWrite(PIN_SERVO, LOW);
 }
