@@ -6,7 +6,7 @@
 
 ## Circuit Diagram
 
-TODO
+[![circuit diagram hosted on flickr](https://farm1.staticflickr.com/683/22142748074_fd9b4c79d8_o.png)](https://www.flickr.com/photos/markfickett/22142748074/in/dateposted-public/)
 
 ## Parts
 
