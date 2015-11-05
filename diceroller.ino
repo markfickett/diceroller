@@ -2,6 +2,10 @@
 #define PIN_SERVO 2
 #define PIN_PICTURE 1
 
+// Empirically, the shape of a histogram or roll results for a d20 seems to
+// settle at/above 2k rolls, so stopping at 3k should produce good results.
+#define AUTO_STOP_COUNT 3000
+
 // Usable range is around [-30, 200].
 #define ANGLE_SHAKE -30
 #define ANGLE_UPRIGHT 195
@@ -14,12 +18,15 @@
 #define SERVO_UPDATE_INTERVAL_MS 20
 
 uint16_t servoMicros;
+uint16_t rollCount;
 
 void setup() {
   pinMode(PIN_SERVO, OUTPUT);
   setServoAngle(ANGLE_UPRIGHT);
   pinMode(PIN_PICTURE, OUTPUT);
   pinMode(PIN_STATUS_LED, OUTPUT);
+
+  rollCount = 0;
 }
 
 void loop() {
@@ -41,6 +48,11 @@ void loop() {
   delay(DELAY_PICTURE_MS); // No servo updates: avoid shaking.
   digitalWrite(PIN_PICTURE, LOW);
   digitalWrite(PIN_STATUS_LED, LOW);
+
+  if (++rollCount > AUTO_STOP_COUNT) {
+    cli(); // stop interrupts
+    while (true);
+  }
 }
 
 // Set the new servo angle and refresh it / wait for it to catch up.
