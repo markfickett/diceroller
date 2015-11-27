@@ -2,7 +2,7 @@
 
 [![video](http://img.youtube.com/vi/UdA5ydENTHY/0.jpg)](https://www.youtube.com/watch?v=UdA5ydENTHY)
 
-[Project details, results, and construction photos](http://www.markfickett.com/stuff/artPage.php?id=389).
+[Project details, results, and construction photos](http://www.markfickett.com/dice).
 
 ## Circuit Diagram
 
